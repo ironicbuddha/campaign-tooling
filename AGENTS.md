@@ -95,72 +95,18 @@ If it removes tension, it probably doesn’t belong.
 
 ---
 
-## Authoring rules (humans and AI)
-1. Never leak PRIVATE content into PUBLIC.
-2. Never edit generated files in the public repo.
-3. Keep each file focused on one idea.
-4. Frontmatter discipline:
-   - `id` = filename slug
-   - `title` = human-readable
-   - `type` = faction / quest / location / etc.
-   - `status` = draft | canon
-5. Contradictions are allowed here. Resolve them later.
-6. Ambiguity is a feature, not a bug.
+## Creativity protocol (Verbalized Sampling / outside-the-meme mode)
+Use **Verbalized Sampling (VS)** to escape typical, trope-heavy outputs.
 
----
+Seven-word trigger (use verbatim):
+**Generate five diverse candidates with their probabilities.**
 
-## Quests (pay attention)
-Quests are **situations**, not stories.
-
-- PUBLIC:
-  - briefing
-  - known facts
-  - rumors
-  - stated objective
-  - things the party can reasonably discover
-- PRIVATE:
-  - what is actually happening
-  - antagonistic forces
-  - timelines if ignored
-  - secrets and false assumptions
-  - branching consequences
-
-If a quest can be “solved” by reading the PUBLIC section, it is badly written.
-
----
-
-## Publishing pipeline (do not improvise)
-From this repo:
-
-PUBLIC_REPO_PATH="../<campaign>-public" ./scripts/release.sh
-
-This:
-- exports PUBLIC blocks into the public repo
-- triggers compilation into player guides (Markdown + optional PDF)
-
-The public repo is **output**.  
-This repo is **truth**.
-
----
-
-## How AI agents should behave here
-- Treat this repo as **source code**
-- Be conservative with PUBLIC knowledge
-- Default to PRIVATE when uncertain
-- Preserve tone, metaphysics, and constraints
-- Optimize for playability, not completeness
-- Introduce pressure, trade-offs, and consequences
-
-Your job is not to finish the world.  
-Your job is to make it **dangerous to misunderstand**.
+Return a distribution of candidates, deliberately select from the tails,
+then synthesize a constraint-respecting result.
 
 ---
 
 ## Intent
-This toolchain exists to:
-- think faster than typing allows
-- separate knowledge safely
-- evolve a campaign without retcon chaos
-- let players discover truth at the table, not in a document
+This repo is designed to help generate worlds that resist easy answers.
 
 If something feels neat, clean, or resolved — look again.
