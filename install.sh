@@ -115,6 +115,7 @@ main() {
   mkdir -p "$gm_path" "$public_path"
   cp -R "$SKELETON_GM/." "$gm_path/"
   cp -R "$SKELETON_PUBLIC/." "$public_path/"
+  cp AGENTS.md "$gm_path/AGENTS.md"
 
   echo "Wiring defaults (public repo name) into GM repo..."
   wire_public_repo_name "$gm_path" "$public_repo"
