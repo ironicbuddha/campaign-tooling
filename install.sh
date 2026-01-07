@@ -124,8 +124,20 @@ main() {
     echo "== --no-git: Skipping git init/commit =="
   else
     echo "== Initializing git repos =="
-    ( cd "$gm_path" && git init && git add . && git commit -m "Bootstrap GM campaign repo" )
-    ( cd "$public_path" && git init && git add . && git commit -m "Bootstrap public player repo" )
+    (
+      cd "$gm_path"
+      git init
+      git config core.hooksPath .githooks
+      git add .
+      SKIP_MD_LINT=1 git commit -m "Bootstrap GM campaign repo"
+    )
+    (
+      cd "$public_path"
+      git init
+      git config core.hooksPath .githooks
+      git add .
+      SKIP_MD_LINT=1 git commit -m "Bootstrap public player repo"
+    )
   fi
 
   echo
