@@ -4,3 +4,5 @@ Thumbs.db
 .idea/
 .venv/
 __pycache__/
+.mdbook-src/
+site/

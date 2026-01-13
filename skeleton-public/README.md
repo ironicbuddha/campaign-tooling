@@ -2,6 +2,15 @@
 
 This repository contains **player-safe** materials only.
 
+## Nice wiki site (mdBook)
+Build the local HTML site:
+```bash
+./scripts/build_mdbook.sh
+```
+This generates sources in `.mdbook-src/` and (if `mdbook` is installed) the site in `site/`.
+
+To enable GitHub Pages, copy `workflows/pages.yml.template` to `.github/workflows/pages.yml`.
+
 ## Build guides
 ```bash
 ./scripts/compile_guides.sh

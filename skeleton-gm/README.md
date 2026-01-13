@@ -21,3 +21,10 @@ PUBLIC_REPO_PATH="../__PUBLIC_REPO_NAME__" ./scripts/release.sh
 - Repo conventions, templates, export pipeline, and reference ingest live in `items/meta/tooling/`.
 - Reference ingest audit trail: `items/meta/_reference_ingest_log.md`.
 - Idea inbox for unallocated fragments: `items/meta/idea-box/`.
+
+## Nice wiki site (mdBook)
+Build the local HTML site:
+```bash
+./scripts/build_mdbook.sh
+```
+This generates sources in `.mdbook-src/` and (if `mdbook` is installed) the site in `site/`.

@@ -18,6 +18,13 @@ chmod +x install.sh
 ./install.sh
 ```
 
+## Nice wiki site (mdBook)
+The generated repos include scripts to produce a nice-looking HTML “wiki/book”:
+- Public repo: `./scripts/build_mdbook.sh` (uses a manifest to select content)
+- GM repo: `./scripts/build_mdbook.sh` (renders PUBLIC/PRIVATE as explicit sections)
+
+To enable GitHub Pages in the public repo, copy `workflows/pages.yml.template` to `.github/workflows/pages.yml` and push.
+
 
 ## Reference ingest
 The generated GM repo includes a lightweight pipeline for importing conversation records into canon:

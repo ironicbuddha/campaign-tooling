@@ -68,7 +68,7 @@ expand_include() {
 
 is_excluded() {
   local file="$1"; shift
-  local excludes=("${@:-}")
+  local -a excludes=("$@")
   local rel="${file#$ROOT_DIR/}"
   for pat in "${excludes[@]}"; do
     case "$rel" in
@@ -81,7 +81,7 @@ is_excluded() {
 compile_manifest() {
   local manifest="$1"
   local OUTPUT="" TITLE=""
-  local includes=() excludes=()
+  local -a includes=() excludes=()
 
   while IFS= read -r line; do
     line="$(echo "$line" | trim)"
@@ -103,27 +103,46 @@ compile_manifest() {
   local OUT_PDF="$ROOT_DIR/${OUTPUT}.pdf"
   mkdir -p "$(dirname "$OUT_MD")"
 
-  local files=()
+  local -a files=()
   for inc in "${includes[@]}"; do
     while IFS= read -r f; do
       [[ -z "$f" ]] && continue
       files+=("$f")
     done < <(expand_include "$inc")
   done
-files_tmp="$(printf "%s
-" "${files[@]}" | awk '!seen[$0]++' | sort)"
+  local files_tmp=""
+  if [[ ${#files[@]} -gt 0 ]]; then
+    files_tmp="$(printf "%s\n" "${files[@]}" | awk '!seen[$0]++' | sort)"
+  fi
   files=()
-  while IFS= read -r line; do
-    [[ -z "$line" ]] && continue
-    files+=("$line")
-  done <<< "$files_tmp"
+  if [[ -n "$files_tmp" ]]; then
+    while IFS= read -r line; do
+      [[ -z "$line" ]] && continue
+      files+=("$line")
+    done <<< "$files_tmp"
+  fi
 
-  local filtered=()
-  for f in "${files[@]}"; do
-    if is_excluded "$f" "${excludes[@]:-}"; then continue; fi
-    filtered+=("$f")
-  done
-  files=("${filtered[@]}")
+  local -a filtered=()
+  if [[ ${#files[@]} -gt 0 ]]; then
+    for f in "${files[@]}"; do
+      if is_excluded "$f" "${excludes[@]:-}"; then continue; fi
+      filtered+=("$f")
+    done
+  fi
+  files=()
+  if [[ ${#filtered[@]} -gt 0 ]]; then
+    files=("${filtered[@]}")
+  fi
+
+  if [[ ${#files[@]} -eq 0 ]]; then
+    {
+      echo "# $TITLE"
+      echo
+      echo "_No entries matched this manifest._"
+    } > "$OUT_MD"
+    echo "Wrote: $OUT_MD"
+    return 0
+  fi
 
   {
     echo "# $TITLE"
@@ -131,6 +150,7 @@ files_tmp="$(printf "%s
     echo "> This document reflects common knowledge in the world. Rumors, myths, and errors may be present."
     echo
     echo "## Table of Contents"
+    echo
   } > "$OUT_MD"
 
   for f in "${files[@]}"; do
@@ -140,21 +160,33 @@ files_tmp="$(printf "%s
     echo "- [$t](#$slug)  \`$rel\`" >> "$OUT_MD"
   done
 
-  echo -e "\n---\n" >> "$OUT_MD"
+  {
+    echo
+    echo "---"
+    echo
+  } >> "$OUT_MD"
 
-  for f in "${files[@]}"; do
+  local last_idx=$(( ${#files[@]} - 1 ))
+  for idx in "${!files[@]}"; do
+    f="${files[$idx]}"
     t="$(extract_title "$f")"
     rel="${f#$ROOT_DIR/}"
+    body="$(strip_frontmatter_and_h1 "$f")"
     {
       echo "## $t"
       echo
       echo "_Source: \`$rel\`_"
       echo
-      strip_frontmatter_and_h1 "$f"
-      echo
+      if [[ -n "$body" ]]; then
+        echo "$body"
+        echo
+      fi
       echo "---"
-      echo
     } >> "$OUT_MD"
+
+    if [[ "$idx" -lt "$last_idx" ]]; then
+      echo >> "$OUT_MD"
+    fi
   done
 
   echo "Wrote: $OUT_MD"

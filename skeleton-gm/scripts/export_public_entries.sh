@@ -90,7 +90,7 @@ while IFS= read -r -d '' file; do
     rm -f "$out_file"
     continue
   fi
-  printf "%s" "$content" > "$out_file"
+  printf "%s\n" "$content" > "$out_file"
 done < <(find "$ITEMS_DIR" -type f -name "*.md" -print0 | sort -z)
 
 echo "Export complete -> $OUT_DIR"
