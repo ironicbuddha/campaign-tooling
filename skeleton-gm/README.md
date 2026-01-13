@@ -16,3 +16,8 @@ PUBLIC_REPO_PATH="../__PUBLIC_REPO_NAME__" ./scripts/release.sh
 ```bash
 ./scripts/new_item.sh <type> <slug> "<Title>"
 ```
+
+## Tooling docs
+- Repo conventions, templates, export pipeline, and reference ingest live in `items/meta/tooling/`.
+- Reference ingest audit trail: `items/meta/_reference_ingest_log.md`.
+- Idea inbox for unallocated fragments: `items/meta/idea-box/`.

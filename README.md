@@ -18,6 +18,14 @@ chmod +x install.sh
 ./install.sh
 ```
 
+
+## Reference ingest
+The generated GM repo includes a lightweight pipeline for importing conversation records into canon:
+- Parse PDFs to PRIVATE Markdown: `python3 scripts/parse_references.py` (writes to `references/parsed/` by default).
+- Tooling docs and conventions: `items/meta/tooling/`
+- Ingest audit trail: `items/meta/_reference_ingest_log.md`
+- Idea inbox (one file per fragment): `items/meta/idea-box/`
+
 ## After install
 From the GM repo:
 ```bash
