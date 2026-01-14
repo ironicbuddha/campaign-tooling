@@ -22,4 +22,18 @@ echo "== Compiling guides in public repo =="
 )
 
 echo
+echo "== Committing and pushing public repo =="
+(
+  cd "$PUBLIC_REPO_PATH"
+  git add -A
+  if git diff --cached --quiet; then
+    echo "No public repo changes to commit."
+    exit 0
+  fi
+  ts="$(date -u '+%Y-%m-%d %H:%M UTC')"
+  git commit -m "Release: ${ts}"
+  git push
+)
+
+echo
 echo "Done."

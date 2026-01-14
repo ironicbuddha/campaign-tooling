@@ -20,6 +20,23 @@ fi
 
 mkdir -p "$OUT_DIR"
 
+is_published() {
+  local file="$1"
+  python3 - <<PY
+from pathlib import Path
+import re, sys
+
+text = Path("$file").read_text(encoding="utf-8")
+m = re.match(r"^---\\s*\\n(.*?)\\n---\\s*\\n", text, re.S)
+if not m:
+    sys.exit(1)
+front = m.group(1)
+m_status = re.search(r"^status:\\s*(.+)\\s*$", front, re.M)
+status = m_status.group(1).strip() if m_status else ""
+sys.exit(0 if status == "published" else 1)
+PY
+}
+
 validate_markers() {
   local file="$1"
   python3 - <<PY
@@ -83,6 +100,11 @@ while IFS= read -r -d '' file; do
   out_file="$OUT_DIR/$rel"
   mkdir -p "$(dirname "$out_file")"
 
+  if ! is_published "$file"; then
+    rm -f "$out_file"
+    continue
+  fi
+
   validate_markers "$file"
 
   content="$(render_export "$file")"
@@ -95,5 +117,6 @@ done < <(find "$ITEMS_DIR" -type f -name "*.md" -print0 | sort -z)
 
 echo "Export complete -> $OUT_DIR"
 echo
+echo "Note: Only entries with \`status: published\` in frontmatter are exported."
 echo "Public repo status:"
 ( cd "$PUBLIC_REPO_PATH" && git status --porcelain && echo "OK" )
